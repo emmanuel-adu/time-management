@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Table of Contents
+
 ## Getting Started
 
 First, run the development server:
@@ -43,7 +45,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 npx create-next-app@latest --experimental-app
 ```
 
-dependencies: 
+dependencies:
 
 ```json
 {
@@ -69,9 +71,13 @@ The dev dependencies:
 }
 ```
 
+### Prettier
+
+- [documentation on adding tailwind to prettier](https://github.com/tailwindlabs/prettier-plugin-tailwindcss)
+
 ## Folder Structure
 
-![](attachments/Pasted%20image%2020230208162820.png)
+![folder structure](./assets/folderstructure.png)
 
 ## Database
 
@@ -86,11 +92,12 @@ DATABASE_URL="your-connection-string"
 We can then initialize a prisma project with: `npx prisma init`
 
 ### Schema
+
 - Prisma schema documentation: https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference
 
 Format schema :
 
-`npx prisma format` 
+`npx prisma format`
 
 ### Migrations
 
@@ -103,7 +110,7 @@ Luckily for us, prisma handles all of this for us. We can use the migrate comman
 
 `npx prisma migrate dev`
 
-If we make changes to our Schema we need to run 
+If we make changes to our Schema we need to run
 
 `npx prisma generate`
 
@@ -114,24 +121,24 @@ Because Next API functions run in a serveless environment, we're going to cache 
 In `/lib/db.ts` add this
 
 ```ts
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client'
 
 declare global {
   // eslint-disable-next-line no-var
-  var cachedPrisma: PrismaClient;
+  var cachedPrisma: PrismaClient
 }
 
-let prisma: PrismaClient;
-if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient();
+let prisma: PrismaClient
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient()
 } else {
   if (!global.cachedPrisma) {
-    global.cachedPrisma = new PrismaClient();
+    global.cachedPrisma = new PrismaClient()
   }
-  prisma = global.cachedPrisma;
+  prisma = global.cachedPrisma
 }
 
-export const db = prisma;
+export const db = prisma
 ```
 
 ### Seed Script
@@ -198,4 +205,3 @@ we'll use route grouping here. This will allow us to have two root layouts witho
     [id]
       page
 ```
-
