@@ -1,6 +1,28 @@
+<!-- omit in toc -->
+
+# Time Management Applicaiton using NextJS
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Table of Contents
+<!-- omit in toc -->
+
+## Table of Content
+
+- [Time Management Applicaiton using NextJS](#time-management-applicaiton-using-nextjs)
+  - [Table of Content](#table-of-content)
+  - [Getting Started](#getting-started)
+  - [Learn More](#learn-more)
+  - [Deploy on Vercel](#deploy-on-vercel)
+  - [Starting Application](#starting-application)
+    - [Prettier](#prettier)
+  - [Folder Structure](#folder-structure)
+  - [Database](#database)
+    - [Schema](#schema)
+    - [Migrations](#migrations)
+    - [DB Helper Functions](#db-helper-functions)
+    - [Seed Script](#seed-script)
+    - [Seed database](#seed-database)
+  - [Routes](#routes)
 
 ## Getting Started
 
@@ -74,6 +96,8 @@ The dev dependencies:
 ### Prettier
 
 - [documentation on adding tailwind to prettier](https://github.com/tailwindlabs/prettier-plugin-tailwindcss)
+- [Adding import order to prettier](https://github.com/trivago/prettier-plugin-sort-imports)
+- to format: `npm run format`
 
 ## Folder Structure
 
@@ -103,8 +127,8 @@ Format schema :
 
 After creating our schema, we need to do a few things:
 
-1.  Sync our DB and schema together
-2.  Generate a typesafe ORM based on our schema so we can interact with the DB
+1. Sync our DB and schema together
+2. Generate a typesafe ORM based on our schema so we can interact with the DB
 
 Luckily for us, prisma handles all of this for us. We can use the migrate command.
 

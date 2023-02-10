@@ -1,3 +1,3 @@
 export default function Singin() {
-    return <div>signin</div>
+  return <div>signin</div>
 }
