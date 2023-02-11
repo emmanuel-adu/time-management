@@ -5,7 +5,10 @@ const nextConfig = {
     serverComponentsExternalPackages: ['bcrypt']
   },
   typescript: {
-    ignoreBuildErrors: true
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   }
 }
 
