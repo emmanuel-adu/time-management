@@ -1,8 +1,9 @@
 'use client'
-import Link from 'next/link'
-import { Settings, User, Grid, Calendar } from 'react-feather'
-import { usePathname } from 'next/navigation'
+
 import clsx from 'clsx'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Calendar, Grid, Settings, User } from 'react-feather'
 
 const icons = { Settings, User, Grid, Calendar }
 

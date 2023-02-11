@@ -1,5 +1,6 @@
 import GlassPane from '@/components/GlassPane'
 import '@/styles/global.css'
+
 // import { Inter } from '@next/font/google';
 
 // const inter = Inter({
@@ -11,7 +12,9 @@ export default function AuthRootLayout({ children }) {
     <html lang='en'>
       <head />
       <body className='rainbow-mesh h-screen w-screen p-6'>
-        <GlassPane className='flex h-full w-full items-center justify-center'>{children}</GlassPane>
+        <GlassPane className='flex h-full w-full items-center justify-center'>
+          {children}
+        </GlassPane>
       </body>
     </html>
   )

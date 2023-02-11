@@ -4,7 +4,6 @@ module.exports = {
   jsxSingleQuote: true,
   semi: false,
   trailingComma: 'none',
-  printWidth: 100,
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   plugins: [require.resolve('prettier-plugin-tailwindcss')]
