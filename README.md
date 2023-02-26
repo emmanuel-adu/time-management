@@ -1,28 +1,47 @@
 <!-- omit in toc -->
-
-# Time Management Applicaiton using NextJS
+# Time Management Application using NextJS
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 <!-- omit in toc -->
-
 ## Table of Content
 
-- [Time Management Applicaiton using NextJS](#time-management-applicaiton-using-nextjs)
-  - [Table of Content](#table-of-content)
-  - [Getting Started](#getting-started)
-  - [Learn More](#learn-more)
-  - [Deploy on Vercel](#deploy-on-vercel)
-  - [Starting Application](#starting-application)
-    - [Prettier](#prettier)
-  - [Folder Structure](#folder-structure)
-  - [Database](#database)
+- [Application](#application)
+- [Getting Started](#getting-started)
+- [Learn More](#learn-more)
+- [Deploy on Vercel](#deploy-on-vercel)
+- [Starting Application](#starting-application)
+  - [Prettier](#prettier)
+- [Folder Structure](#folder-structure)
+- [Database](#database)
+  - [Railway](#railway)
+  - [Local PSQL](#local-psql)
+    - [Starting PSQL server](#starting-psql-server)
+    - [Creating PSQL DB](#creating-psql-db)
+    - [Listing Databases](#listing-databases)
+    - [Switching between Databases](#switching-between-databases)
+    - [Deleting Database](#deleting-database)
+    - [Tables](#tables)
+    - [Connecting to local psql db](#connecting-to-local-psql-db)
+  - [Prisma](#prisma)
     - [Schema](#schema)
     - [Migrations](#migrations)
+      - [Using Local PSQL Migration](#using-local-psql-migration)
+      - [Using Prisma Migration](#using-prisma-migration)
+    - [Generate Prisma Client](#generate-prisma-client)
     - [DB Helper Functions](#db-helper-functions)
     - [Seed Script](#seed-script)
-    - [Seed database](#seed-database)
-  - [Routes](#routes)
+      - [Using Local PSQL Seed](#using-local-psql-seed)
+      - [Writing Seed Script](#writing-seed-script)
+      - [Seeding with Prisma](#seeding-with-prisma)
+- [Routes](#routes)
+
+## Application
+
+Time management application using NextJS, Prism, and Auth.
+
+![welcome page](./assets/welcome.png)
+![project page](./assets/tasks.png)
 
 ## Getting Started
 
@@ -101,9 +120,11 @@ The dev dependencies:
 
 ## Folder Structure
 
-![folder structure](./assets/folderstructure.png)
+![folder structure](./assets/structure.png)
 
 ## Database
+
+### Railway
 
 The fastest and easiest way to setup a Psql DB if you don't already have one is to use a hosted one.
 
@@ -113,34 +134,179 @@ Checkout [Railway](https://railway.app/) to setup a free one. Either way, you'
 DATABASE_URL="your-connection-string"
 ```
 
-We can then initialize a prisma project with: `npx prisma init`
+### Local PSQL
 
-### Schema
+#### Starting PSQL server
 
-- Prisma schema documentation: https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference
+Homebrew services plugin makes it easy to manage services that are installed with homebrew
 
-Format schema :
+```shell
+brew services list
+```
+
+To start/stop a PSQL server as a service, run the following command.
+
+```shell
+brew services start postgresql
+brew services stop postgresql
+```
+
+To verify that the server has started or stop, check the list of running services.
+
+```shell
+brew services list
+```
+
+#### Creating PSQL DB
+
+Interact with Postgres using `psql` environment.
+
+```shell
+psql
+```
+
+> If this display an error, you may need to create a default database. To do so, enter:
+>
+> ```shell
+> createdb
+> ```
+
+Let's create a local time management database. Avoid naming postgres db with capital letter, instead use underscore.
+
+```shell
+CREATE DATABASE time_management;
+```
+
+We can also create from command line outside of psql environment with:
+
+```shell
+createdb time_management;
+```
+
+#### Listing Databases
+
+We can verify db creation by listing with `\l` command to list all databases.
+
+#### Switching between Databases
+
+We can switch database with the command `\c`
+
+```shell
+\c time_management
+```
+
+#### Deleting Database
+
+To delete a database we need to switch out of it first, back to the default; then use `DROP DATABASE` command.
+
+```shell
+\c default
+DROP DATABASE time_management
+```
+
+#### Tables
+
+To display tables in the current connected database run the REPL command,
+
+```shell
+\dt
+```
+
+To verify that table was created with the correct columns, run the command,
+
+```shell
+# no uppercase
+\d <table_name>
+
+# If uppercase name
+\d "<TableName>"
+```
+
+We can view contents in a table
+
+```shell
+SELECT * FROM <table_name>
+```
+
+#### Connecting to local psql db
+
+By default prisma requires a username and password when connecting to a PostgreSQL database using Prisma
+
+```shell
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://<username>:<password>@localhost:5432/time_management"
+}
+```
+
+> Replace `<username>` with the username you want to use (e.g. postgres) >and `<password>` with the password for that user. If you're using an >empty password, you can omit the `:<password>` part of the URL.
+
+### Prisma
+
+Prisma is a database query builder similar to Knex. Basically by using prisma we get our SQL queries automatically generated for us and it is type-safe.
+
+We can then initialize a prisma project with:
+
+```shell
+npx prisma init
+```
+
+This creates a new project directory in the current directory and adds to the following files:
+
+- `prisma` directory: contains the configuration files for prisma, including the `schema.prisma` file which defines the data models for the database.
+- `node_modules` directory: this contains the dependencies required by prisma and the project.
+- `package.json` file: this contains the metadata for the project and scripts.
+
+#### Schema
+
+- [Prisma schema documentation](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference)
+
+Format schema: This command formats the Prisma schema file `schema.prisma` according to Prisma's code style guidelines.
 
 `npx prisma format`
 
-### Migrations
+#### Migrations
+
+##### Using Local PSQL Migration
+
+A **migration** is a file that contains SQL commands that are used to recreate the tables in a database on demand.
+
+To migrate the `time_management` database **locally**, run the following command from the shell:
+
+```shell
+psql time_management -f migration.sql
+```
+
+##### Using Prisma Migration
 
 After creating our schema, we need to do a few things:
 
 1. Sync our DB and schema together
-2. Generate a typesafe ORM based on our schema so we can interact with the DB
+2. Generate a type safe ORM based on our schema so we can interact with the DB
 
-Luckily for us, prisma handles all of this for us. We can use the migrate command.
+Luckily for us, prisma handles all of this for us. We can use the migrate command. This will create the database tables and columns based on the schema.
 
 `npx prisma migrate dev`
 
-If we make changes to our Schema we need to run
+#### Generate Prisma Client
+
+This will generate our prisma client
 
 `npx prisma generate`
 
-### DB Helper Functions
+When you generate the Prisma client, Prisma takes your Prisma schema and generates a strongly-typed Prisma client that you can use to interact with your database in code.
 
-Because Next API functions run in a serveless environment, we're going to cache our Prisma client and reuse it when possible to avoid having too many connections.
+The methods provided by Prisma client can be grouped into a few catagories:
+
+- CRUD operation in database. For example, `createOne`, `findMany`, `update`, and `delete`.
+- Aggregations operation on database. For example, `count`, `sum`, and `average`.
+- [client method documentation](https://www.prisma.io/docs/concepts/components/prisma-client/crud)
+
+Prima client is generated based on our schema, so any changes made to the schema will require us to regenerate the client to reflect those changes in code.
+
+#### DB Helper Functions
+
+Because Next API functions run in a serverless environment, we're going to cache our Prisma client and reuse it when possible to avoid having too many connections.
 
 In `/lib/db.ts` add this
 
@@ -165,7 +331,17 @@ if (process.env.NODE_ENV === 'production') {
 export const db = prisma
 ```
 
-### Seed Script
+#### Seed Script
+
+##### Using Local PSQL Seed
+
+A **seed** file contains SQL commands that are used to recreate rows in a table on demand (insert data into the Tables).
+
+```shell
+psql time_management -f seed.sql
+```
+
+##### Writing Seed Script
 
 All we have to do is write a seed script. A seed script is just a piece of code that inserts fake data into our dev DB so we can use it for development.
 
@@ -181,25 +357,27 @@ Next, let's adjust our package.json.
 }
 ```
 
-### Seed database
+##### Seeding with Prisma
 
-run migration to seed
-
-```shell
-npx prisma migrate dev
-```
-
-run seed:
+Command in the Prisma CLI that allows you to seed (populate) your database with initial data.
 
 ```shell
 npx prisma db seed
 ```
 
-check that data was seeded currectly:
+By default, Prisma looks for a file named seed.ts in the prisma/ directory. This file should export an async function called seed that contains the data you want to seed.
+
+When you run npx prisma db seed, Prisma will execute the seed function and insert the data into your database.
+
+> Note that you must have already created your database and migrated your schema before running the seed command.
+
+check that data was seeded correctly:
 
 ```shell
 npx prisma studio
 ```
+
+> Can also verify by checking your local pSQL database
 
 ## Routes
 

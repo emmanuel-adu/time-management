@@ -15,7 +15,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email     String  @unique
+  email     String    @unique
   password  String
   firstName String
   lastName  String
@@ -61,8 +61,8 @@ model Task {
   project   Project @relation(fields: [projectId], references: [id])
 
   description String?
-  due     DateTime?
-  deleted Boolean   @default(false)
+  due         DateTime?
+  deleted     Boolean   @default(false)
 
   @@index([ownerId])
 }

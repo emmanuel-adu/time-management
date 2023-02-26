@@ -20,7 +20,6 @@ async function main() {
       firstName: 'User',
       lastName: 'Person',
         password: await hashPassword("password"),
-      // password: 'password',
       projects: {
         create: new Array(5).fill(1).map((_, i) => ({
           name: `Project ${i}`,
